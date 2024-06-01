@@ -1,12 +1,18 @@
 
 # Kleines UI zur Aufzeichnung von Bildern auf einer Drehplatte
 
+## ToDO
+
+- [ ] add TB6600 Driver in schrittmotor_TB6600.py
+- [ ] test camera on Raspi 5 
+- [ ] check that all images are stored in subfolders of `./captured_images` 
+
 ## Hardware:
 
 - Raspberry Pi 5
 - Canon EOS 70D
-- Steppermotor ULN2003
-- [ ] Größerer Motor 
+- Steppermotor mit ULN2003 Treiber
+- [ ] Steppermotor mit TB6600 Treiber
 
 ## Installation
 

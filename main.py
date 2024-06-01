@@ -1,6 +1,6 @@
 import config
 import time
-import schrittmotor
+import schrittmotor_TB6600
 import camera
 
 # In Start State Verbinde Kamera und lies config aus
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     # Connect Camera
     cam = camera.Camera()
     # Move to start position
-    stepper = schrittmotor.StepperMotor()
+    stepper = schrittmotor_TB6600.StepperMotor()
 
     # For Position 
 
