@@ -29,8 +29,10 @@ with tab1:
         cam.set_file_path("./test_images")
         cam.set_file_name(f"{int(time.time())}_captured_image.CR2")
         test_image = cam.capture_image()
-        st.image(test_image)
-
+        try:
+            st.image(test_image)
+        except:
+            st.write("Image not found!")
 
     st.write("## Image Series")
     number_of_images = st.number_input("Number of Images to Capture", 1, 10, 1)
