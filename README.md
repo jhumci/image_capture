@@ -37,6 +37,7 @@
 - [x] GPIO interface is different on Raspberry Pi 5 changes in [schrittmotor_ULN2003.py](./schrittmotor_ULN2003.py) reqired
 - [x] Camera with `gphoto2` - if `Could not claim the USB device`
    - https://askubuntu.com/questions/993876/gphoto2-could-not-claim-the-usb-device
+- [ ] Ethernet connection gets lost after a while
 
 ## User Interface
 
