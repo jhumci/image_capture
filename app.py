@@ -30,7 +30,7 @@ with tab1:
     if st.button("Make Test Image"):
         cam = camera.Camera()
         cam.set_file_path("./test_images")
-        cam.set_file_name(f"{int(time.time())}_captured_image.jpg")
+        cam.set_file_name(f"{int(time.time())}_captured_image.CR2")
         test_image = cam.capture_image()
         st.image(test_image)
 
@@ -45,24 +45,24 @@ with tab1:
     comments = st.text_area("Comments")
 
     if st.button("Capture Images!"):
-        #cam = camera.Camera()
-        #cam.set_file_path(f"./{name}")
+        cam = camera.Camera()
+        cam.set_file_path(f"./{name}")
 
         degree_step = 360/number_of_images
-
+        degree = 0
         for position in range(0,number_of_images):
             stepper.move_by_degree(degree_step)
-
+            degree = degree + degree_step
             time.sleep(0.5)
             image_folder = "./test_images"
-            #image_folder = "-/captured_images/"# + name
+            image_folder = "-/captured_images/" + name
             
-            #cam.set_file_path(image_folder)
-            #cam.set_file_name(f"{int(time.time())}_{str(degree)}_captured_image.CR2")
-            #test_image = cam.capture_image()
+            cam.set_file_path(image_folder)
+            cam.set_file_name(f"{int(time.time())}_{str(degree)}_captured_image.CR2")
+            test_image = cam.capture_image()
         
-            #st.write(f"## Image Captured Last at {degree} degree")
-            #st.image(test_image)
+            st.write(f"## Image Captured Last at {degree} degree")
+            st.image(test_image)
 
         # Show a list of the captured images
         st.write("## Captured Images")

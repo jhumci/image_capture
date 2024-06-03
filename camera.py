@@ -26,7 +26,7 @@ class Camera:
 
     def capture_image(self):
         try:
-
+            subprocess.run(["pkill", "-f", "gphoto"])
             cmd = ["gphoto2", "--capture-image-and-download", "--filename", f"{self.file_path}/{self.file_name}"]
 
             # Use Popen to capture and automatically provide input
