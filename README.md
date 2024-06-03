@@ -3,9 +3,10 @@
 
 ## ToDO
 
-- [ ] add TB6600 Driver in schrittmotor_TB6600.py
+- [ ] write TB6600 Driver in schrittmotor_TB6600.py
 - [ ] test camera on Raspi 5 
-- [ ] check that all images are stored in subfolders of `./captured_images` 
+- [ ] check that all images are stored in subfolders of `./captured_images`
+- [ ] Connect to EDUROAM
 
 ## Hardware:
 
@@ -16,8 +17,9 @@
 
 ## Installation
 
+- Connect to RasPi via SSH (Ethernet or Wifi (Make Hotspot: `ReySolo` / `12345678`))
 - `ssh bob@raspberrypi.local`, pw: `letmein`
-- conenct to wifi `raspi-config`
+- conenct to other wifi `raspi-config`
 - Install for camera: `$ sudo apt install gphoto2 && sudo apt install libgphoto2-6`
 - make venv: `python3 -m venv .venv`
 - activate venv: `source .venv/bin/activate`
