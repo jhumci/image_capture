@@ -54,11 +54,11 @@ with tab1:
             stepper.move_by_degree(degree_step)
             degree = degree + degree_step
             time.sleep(0.5)
-            image_folder = "./test_images"
-            image_folder = "-/captured_images/" + name
+            #image_folder = "./test_images"
+            image_folder = "./captured_images/" + name
             
             cam.set_file_path(image_folder)
-            cam.set_file_name(f"{int(time.time())}_{str(degree)}_captured_image.CR2")
+            cam.set_file_name(f"{int(time.time())}_{str(int(degree))}_captured_image.CR2")
             test_image = cam.capture_image()
         
             st.write(f"## Image Captured Last at {degree} degree")

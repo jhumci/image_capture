@@ -13,6 +13,7 @@ class StepperMotor:
 
     def __init__(self, in1=17, in2=18, in3=27, in4=22):
         
+        StepperMotor.release()
         self.in1 = in1
         self.in2 = in2
         self.in3 = in3
