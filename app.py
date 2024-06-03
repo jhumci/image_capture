@@ -6,10 +6,7 @@ import camera
 import time
 from schrittmotor_ULN2003_rp5 import StepperMotor
 
-StepperMotor.release()
 
-stepper = StepperMotor()
-stepper.set_direction('left')
 
 
 
@@ -48,6 +45,10 @@ with tab1:
         cam = camera.Camera()
         cam.set_file_path(f"./{name}")
 
+        StepperMotor.release()
+        stepper = StepperMotor()
+        stepper.set_direction('left')
+        
         degree_step = 360/number_of_images
         degree = 0
         for position in range(0,number_of_images):
@@ -121,9 +122,10 @@ with tab2:
         high_threshold = st.slider("High Threshold", 0, 255, 160)
         apertureSize = st.slider("Aperture Size", 3, 7, 3, step=2)
 
-
-        transformed_image = canny_edge_detection(f"{path}/{selected_subfolder}/{selected_image}", low_threshold, high_threshold, apertureSize)
-
+        try:
+            transformed_image = canny_edge_detection(f"{path}/{selected_subfolder}/{selected_image}", low_threshold, high_threshold, apertureSize)
+        except:
+            st.write("No image found!")
         
 
     col3, col4 = st.columns(2)

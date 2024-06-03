@@ -8,12 +8,20 @@ class StepperMotor:
 
     @staticmethod
     def release():
-        chip = gpiod.Chip('/dev/gpiochip4')
-        chip.close()
+        try:
+            chip = gpiod.Chip('/dev/gpiochip4')
+            chip.close()
+        except:
+            pass
+        try:
+            chip.close()
+        except:
+            pass
 
     def __init__(self, in1=17, in2=18, in3=27, in4=22):
         
-        StepperMotor.release()
+        
+
         self.in1 = in1
         self.in2 = in2
         self.in3 = in3
@@ -37,6 +45,8 @@ class StepperMotor:
         line_settings = gpiod.LineSettings()
         line_settings.direction = Direction.OUTPUT
 
+        
+        
         self.chip = gpiod.Chip('/dev/gpiochip4')
         self.lines = self.chip.request_lines(
             consumer="StepperMotor",
