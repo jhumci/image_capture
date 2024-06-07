@@ -4,9 +4,20 @@ import config
 from transformations import canny_edge_detection
 import camera
 import time
-from schrittmotor_ULN2003_rp5 import StepperMotor
+#from schrittmotor_ULN2003_rp5 import StepperMotor
+from schrittmotor_TB6600 import StepperMotor
 
 
+# Globale Variable für den Schrittmotor
+stepper = None
+
+# Funktion zum Initialisieren des Schrittmotors
+def initialize_stepper():
+    global stepper
+    if stepper is None:
+        stepper = StepperMotor(DIR=20, PUL=21, ENA=16)
+        stepper.disable_motor()
+        stepper.enable_motor()
 
 
 
@@ -47,11 +58,10 @@ with tab1:
         cam = camera.Camera()
         cam.set_file_path(f"./{name}")
 
-        StepperMotor.release()
-        stepper = StepperMotor()
+        initialize_stepper()
         stepper.set_direction('left')
-        
-        degree_step = 360/number_of_images
+
+        degree_step = 360 / number_of_images
         degree = 0
         for position in range(0,number_of_images):
             stepper.move_by_degree(degree_step)
@@ -79,9 +89,11 @@ with tab1:
     degree = st.number_input("Turn Motor by degree")
 
     if st.button("Turn motor by degree!"):
+        initialize_stepper()
         stepper.move_by_degree(int(degree))
 
     if st.button("Bring back to original position"):
+        initialize_stepper()
         stepper.move_to_original_position()
     
 """    if st.button("Set motor back to zero!"):
