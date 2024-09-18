@@ -4,10 +4,7 @@ import config
 from transformations import canny_edge_detection
 import camera
 import time
-from schrittmotor_ULN2003_rp5 import StepperMotor
-
-
-
+from schrittmotor_TB6600 import StepperMotor
 
 
 path = config.output_directory
