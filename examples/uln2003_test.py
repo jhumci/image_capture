@@ -2,70 +2,106 @@
 import RPi.GPIO as GPIO
 import time
 
-in1 = 17
-in2 = 18
-in3 = 27
-in4 = 22
+# ---------------------------------------------------------
+# Hardware-Pins (BCM-Nummerierung)
+# ---------------------------------------------------------
+IN1 = 17
+IN2 = 18
+IN3 = 27
+IN4 = 22
 
-# careful lowering this, at some point you run into the mechanical limitation of how quick your motor can move
-step_sleep = 0.002
+# ---------------------------------------------------------
+# Parameter für den Schrittmotor
+# ---------------------------------------------------------
+# Zwischenzeit zwischen zwei Schritten (Je kleiner, desto schneller)
+STEP_SLEEP = 0.002
 
-step_count = 4096 # 5.625*(1/64) per step, 4096 steps is 360°
+# 5.625 * (1/64) pro Schritt => 4096 Schritte = 360°
+STEP_COUNT = 4096
 
-direction = False # True for clockwise, False for counter-clockwise
+# Drehrichtung (True = Uhrzeigersinn / clockwise, False = Gegenuhrzeigersinn / counter-clockwise)
+direction = False
 
-# defining stepper motor sequence (found in documentation http://www.4tronix.co.uk/arduino/Stepper-Motors.php)
-step_sequence = [[1,0,0,1],
-                 [1,0,0,0],
-                 [1,1,0,0],
-                 [0,1,0,0],
-                 [0,1,1,0],
-                 [0,0,1,0],
-                 [0,0,1,1],
-                 [0,0,0,1]]
+# Schrittmuster (Halbschrittmodus), Quelle siehe Dokumentation
+STEP_SEQUENCE = [
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+    [1, 1, 0, 0],
+    [0, 1, 0, 0],
+    [0, 1, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 1],
+    [0, 0, 0, 1]
+]
 
-# setting up
-GPIO.setmode( GPIO.BCM )
-GPIO.setup( in1, GPIO.OUT )
-GPIO.setup( in2, GPIO.OUT )
-GPIO.setup( in3, GPIO.OUT )
-GPIO.setup( in4, GPIO.OUT )
+# ---------------------------------------------------------
+# Setup
+# ---------------------------------------------------------
+GPIO.setmode(GPIO.BCM)
 
-# initializing
-GPIO.output( in1, GPIO.LOW )
-GPIO.output( in2, GPIO.LOW )
-GPIO.output( in3, GPIO.LOW )
-GPIO.output( in4, GPIO.LOW )
+# Setze die vier Pins als Ausgänge
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
+GPIO.setup(IN3, GPIO.OUT)
+GPIO.setup(IN4, GPIO.OUT)
 
-motor_pins = [in1,in2,in3,in4]
-motor_step_counter = 0 ;
+# Initialisiere die Pins auf LOW
+GPIO.output(IN1, GPIO.LOW)
+GPIO.output(IN2, GPIO.LOW)
+GPIO.output(IN3, GPIO.LOW)
+GPIO.output(IN4, GPIO.LOW)
+
+# Pins in einer Liste, um sie in der Loop iterieren zu können
+motor_pins = [IN1, IN2, IN3, IN4]
+
+# Merker für den aktuellen Index in der STEP_SEQUENCE
+motor_step_counter = 0
+
 
 def cleanup():
-    GPIO.output( in1, GPIO.LOW )
-    GPIO.output( in2, GPIO.LOW )
-    GPIO.output( in3, GPIO.LOW )
-    GPIO.output( in4, GPIO.LOW )
+    """
+    Setzt alle Motor-Pins auf LOW und säubert die GPIO-Einstellungen.
+    Sollte immer am Ende des Skripts oder bei einem Abbruch aufgerufen werden,
+    damit der Motor nicht in einem undefinierten Zustand verbleibt.
+    """
+    GPIO.output(IN1, GPIO.LOW)
+    GPIO.output(IN2, GPIO.LOW)
+    GPIO.output(IN3, GPIO.LOW)
+    GPIO.output(IN4, GPIO.LOW)
     GPIO.cleanup()
 
-# the meat
-try:
-    i = 0
-    for i in range(step_count):
-        for pin in range(0, len(motor_pins)):
-            GPIO.output( motor_pins[pin], step_sequence[motor_step_counter][pin] )
-        if direction==True:
-            motor_step_counter = (motor_step_counter - 1) % 8
-        elif direction==False:
-            motor_step_counter = (motor_step_counter + 1) % 8
-        else: # defensive programming
-            print( "uh oh... direction should *always* be either True or False" )
-            cleanup()
-            exit( 1 )
-        time.sleep( step_sleep )
 
+# ---------------------------------------------------------
+# Hauptprogramm
+# ---------------------------------------------------------
+try:
+    # Eine volle Umdrehung (STEP_COUNT Schritte)
+    for i in range(STEP_COUNT):
+        # Schrittmuster auf die GPIO-Pins legen
+        for pin_idx in range(len(motor_pins)):
+            GPIO.output(motor_pins[pin_idx], STEP_SEQUENCE[motor_step_counter][pin_idx])
+        
+        # Drehrichtung auswerten und motor_step_counter anpassen
+        if direction is True:
+            # Uhrzeigersinn
+            motor_step_counter = (motor_step_counter - 1) % 8
+        elif direction is False:
+            # Gegenuhrzeigersinn
+            motor_step_counter = (motor_step_counter + 1) % 8
+        else:
+            # Defensive Programmierung
+            print("Uh oh... direction sollte immer True oder False sein.")
+            cleanup()
+            exit(1)
+        
+        # Kurze Pause zwischen Schritten
+        time.sleep(STEP_SLEEP)
+
+# Wenn der User das Skript mit STRG + C abbricht, alles aufräumen
 except KeyboardInterrupt:
     cleanup()
-    exit( 1 )
+    exit(1)
 
+# Nach der Schleife sauber alles aufräumen
 cleanup()
-exit( 0 )
+exit(0)
